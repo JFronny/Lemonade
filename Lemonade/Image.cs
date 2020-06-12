@@ -7,8 +7,8 @@ namespace Lemonade
         public Pixel[,] Img;
         public Image(Pixel[,] img) => Img = img;
 
-        public override Pixel[,] Render() => Img;
-
         public override bool Selectable { get; } = false;
+
+        public override Pixel[,] Render() => Img;
     }
 }

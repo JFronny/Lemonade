@@ -9,19 +9,22 @@ namespace Lemonade
 {
     public class AnimationScreen : CenteredScreen
     {
-        public event OkDelegate Ok;
         public delegate void OkDelegate();
-        private Image imgControl;
+
+        private readonly Image imgControl;
+
         public AnimationScreen(Settings set) : base(100, 20, Black, set.Color)
         {
             ContentPanel.ForeColor = DarkGray;
             Title = "Lemonade - Anim";
-            imgControl = new Image(new Pixel[0,0]);
+            imgControl = new Image(new Pixel[0, 0]);
             SetWeather(new Weather());
             ContentPanel.Controls.Add(imgControl);
             Input += (screen, args) => Ok?.Invoke();
             Close += (screen, args) => Ok?.Invoke();
         }
+
+        public event OkDelegate Ok;
 
         public void SetWeather(Weather w)
         {

@@ -4,8 +4,9 @@ namespace Lemonade
 {
     public class Weather
     {
-        private static Random rnd = new Random();
-        public override string ToString() => W.ToString().Replace('_', ' ');
+        private static readonly Random rnd = new Random();
+
+        public double Factor = rnd.NextDouble();
 
         public W W
         {
@@ -19,7 +20,7 @@ namespace Lemonade
             }
         }
 
-        public double Factor = rnd.NextDouble();
+        public override string ToString() => W.ToString().Replace('_', ' ');
     }
 
     public enum W

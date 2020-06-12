@@ -7,13 +7,14 @@ namespace Lemonade
 {
     public class Settings
     {
-        public bool Color { get; private set; } = true;
-        public int PlayerCount { get; private set; }
-        public float DifficultyFactor { get; private set; }
         public Settings()
         {
             Configure();
         }
+
+        public bool Color { get; private set; } = true;
+        public int PlayerCount { get; private set; }
+        public float DifficultyFactor { get; private set; }
 
         public void Configure()
         {
@@ -22,12 +23,12 @@ namespace Lemonade
                 TabPoint = 0,
                 Title = "Lemonade - Settings"
 #if DEBUG
-                                      + "[R to redraw]"
+                        + "[R to redraw]"
 #endif
             };
             Panel scr = settingsScreen.ContentPanel;
             scr.ForeColor = ConsoleColor.DarkGray;
-            
+
             Label playerLabel = new Label("Players");
             playerLabel.Point = new Point(scr.Size.Width / 2 - playerLabel.Content.Length / 2, 3);
             scr.Controls.Add(playerLabel);
@@ -35,7 +36,7 @@ namespace Lemonade
             Slider playerSlider = new Slider {MinValue = 1, Value = 2, Size = new Size(100, 1)};
             playerSlider.Point = new Point(scr.Size.Width / 2 - playerSlider.Size.Width / 2, 4);
             scr.Controls.Add(playerSlider);
-            
+
             Label difficultyLabel = new Label("Difficulty");
             difficultyLabel.Point = new Point(scr.Size.Width / 2 - difficultyLabel.Content.Length / 2, 7);
             scr.Controls.Add(difficultyLabel);
@@ -46,23 +47,23 @@ namespace Lemonade
 
             CheckBox colorBox = new CheckBox("Color") {Checked = true};
             colorBox.Point = new Point(scr.Size.Width / 2 - (colorBox.Content.Length + 4) / 2, 12);
-            colorBox.CheckedChanged += (screen, args) =>
-            {
-                settingsScreen.Color = colorBox.Checked;
-            };
+            colorBox.CheckedChanged += (screen, args) => { settingsScreen.Color = colorBox.Checked; };
 #if DEBUG
-            settingsScreen.Input += (screen, args) => { if (args.Info.Key == ConsoleKey.R) DiffDraw.Draw(Color, true); };
+            settingsScreen.Input += (screen, args) =>
+            {
+                if (args.Info.Key == ConsoleKey.R) DiffDraw.Draw(Color, true);
+            };
 #endif
             scr.Controls.Add(colorBox);
-            
+
             Button okButton = new Button("OK");
             okButton.Point = new Point(scr.Size.Width / 2 - okButton.Content.Length / 2, 16);
             scr.Controls.Add(okButton);
-            
+
             bool visible = true;
             okButton.Click += (screen, args) => visible = false;
             settingsScreen.Close += (screen, args) => visible = false;
-            
+
             settingsScreen.Render();
             while (visible)
             {

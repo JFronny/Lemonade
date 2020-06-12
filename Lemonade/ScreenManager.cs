@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using CC_Functions.Commandline.TUI;
 
 namespace Lemonade
 {
@@ -12,15 +11,13 @@ namespace Lemonade
         private readonly ResultScreen _result;
         private readonly Settings _settings;
         private readonly TransactionScreen _transaction;
-        private GameState _state;
-        private bool _running;
-        private List<PlayerState> _players;
         private int _currentPlayer;
-        private bool _initialEvent = true;
         private int _day;
+        private bool _initialEvent = true;
+        private readonly List<PlayerState> _players;
+        private bool _running;
+        private GameState _state;
         private Weather _weather;
-        private int signCost => 15;
-        private int GlassCost => _day < 5 ? 2 : 4;
 
         public ScreenManager(Settings settings)
         {
@@ -31,7 +28,8 @@ namespace Lemonade
                 _state = GameState.Transaction;
                 _currentPlayer = 0;
                 _initialEvent = true;
-                _transaction.SetUp(_players[_currentPlayer], _settings, _currentPlayer, _day, _weather, signCost, GlassCost);
+                _transaction.SetUp(_players[_currentPlayer], _settings, _currentPlayer, _day, _weather, signCost,
+                    GlassCost);
             };
             _transaction = new TransactionScreen(settings);
             _transaction.Ok += (glasses, price, signs) =>
@@ -49,7 +47,7 @@ namespace Lemonade
                 }
                 else
                 {
-                    _transaction.Tab(true);
+                    _transaction.Tab();
                     _transaction.Tab(false);
                 }
             };
@@ -64,12 +62,14 @@ namespace Lemonade
             for (int i = 0; i < settings.PlayerCount; i++) _players.Add(new PlayerState(i + 1));
         }
 
+        private int signCost => 15;
+        private int GlassCost => _day < 5 ? 2 : 4;
+
         public void Run()
         {
             _running = true;
             _state = GameState.Setup;
             while (_running)
-            {
                 switch (_state)
                 {
                     case GameState.Setup:
@@ -87,7 +87,8 @@ namespace Lemonade
                     case GameState.Transaction:
                         if (_initialEvent)
                         {
-                            _transaction.SetUp(_players[_currentPlayer], _settings, _currentPlayer, _day, _weather, signCost, GlassCost);
+                            _transaction.SetUp(_players[_currentPlayer], _settings, _currentPlayer, _day, _weather,
+                                signCost, GlassCost);
                             _transaction.Render();
                             _initialEvent = false;
                         }
@@ -107,7 +108,6 @@ namespace Lemonade
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
         }
     }
 }
