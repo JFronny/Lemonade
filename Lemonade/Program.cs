@@ -6,7 +6,12 @@ namespace Lemonade
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Settings settings = new Settings();
+            ScreenManager screenManager = new ScreenManager(settings);
+            screenManager.Run();
+            Console.ResetColor();
         }
     }
 }
