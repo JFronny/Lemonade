@@ -63,10 +63,10 @@ namespace Lemonade
 
             Button okButton = new Button("OK");
             okButton.Point = new Point(ContentPanel.Size.Width / 2 - okButton.Size.Width / 2, 16);
-            okButton.Click += (sender, e) => Ok?.Invoke(_glasses.Value, 10, 0);
+            okButton.Click += (sender, e) => Ok?.Invoke(_glasses.Value, _price.Value, _signs.Value);
             ContentPanel.Controls.Add(okButton);
 
-            Close += (screen, args) => Ok?.Invoke(_glasses.Value, 10, 0);
+            Close += (screen, args) => Ok?.Invoke(_glasses.Value, _price.Value, _signs.Value);
         }
 
         public event OkDelegate Ok;
@@ -101,7 +101,7 @@ namespace Lemonade
             _glasses.MaxValue = (int) Math.Floor(leftover / (double) _lemonadeCost) + _glasses.Value;
             _price.MaxValue = 200;
             _signs.MaxValue = (int) Math.Floor(leftover / (double) _signCost) + _signs.Value;
-            _infoLabelBottom.Content = $"Leftover: ${leftover / 100f}/${_player.Budget / 100f}";
+            _infoLabelBottom.Content = $"Leftover: {leftover.ToDollar()}/{_player.Budget.ToDollar()}";
             _infoLabelBottom.Point = new Point(ContentPanel.Size.Width / 2 - _infoLabelBottom.Content.Length / 2, 14);
         }
 

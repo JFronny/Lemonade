@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using CC_Functions.Commandline;
 using CC_Functions.Commandline.TUI;
+using static System.Environment;
 
 namespace Lemonade
 {
@@ -32,22 +33,22 @@ namespace Lemonade
                 lab.Content = "Lightning struck your table while you were setting it up. Nothing was sold";
             else
                 lab.Content = $"The weather was {weather}. Nothing out of the ordinary happened";
-            lab.Content += Environment.NewLine + players.ToStringTable(
+            lab.Content += NewLine + NewLine + players.ToStringTable(
                 new[]
                 {
-                    "Player", "Glasses made", "Earnings per glass", "Glasses sold", "Signs made",
-                    "Income", "Expenses",
-                    "Profit", "Budget"
+                    "Player", "Glasses made", "Earnings per glass",
+                    "Glasses sold", "Signs made", "Income",
+                    "Expenses", "Profit", "Budget"
                 },
                 s => s.Number,
                 s => s.Glasses,
-                s => s.GlassPrice,
+                s => s.GlassPrice.ToDollar(),
                 s => s.Sales,
                 s => s.Signs,
-                s => s.Earnings,
-                s => s.Expenses,
-                s => s.Earnings - s.Expenses,
-                s => s.Budget);
+                s => s.Earnings.ToDollar(),
+                s => s.Expenses.ToDollar(),
+                s => (s.Earnings - s.Expenses).ToDollar(),
+                s => s.Budget.ToDollar());
             lab.Render();
             ActualSize = new Size(lab.Size.Width, lab.Size.Height);
         }

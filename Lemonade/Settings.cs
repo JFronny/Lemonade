@@ -1,6 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Threading;
+using System.Xml.Linq;
 using CC_Functions.Commandline.TUI;
 
 namespace Lemonade
@@ -12,7 +16,10 @@ namespace Lemonade
             Configure();
         }
 
-        public bool Color { get; private set; } = true;
+        private static string Settingsfile =
+            Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Settings.xml");
+
+        public bool Color { get; private set; }
         public int PlayerCount { get; private set; }
         public float DifficultyFactor { get; private set; }
 
@@ -63,6 +70,15 @@ namespace Lemonade
             bool visible = true;
             okButton.Click += (screen, args) => visible = false;
             settingsScreen.Close += (screen, args) => visible = false;
+            
+            if (!File.Exists(Settingsfile)) GenDef();
+            try {
+                XElement conf = XElement.Parse(File.ReadAllText(Settingsfile));
+                playerSlider.Value = int.Parse(conf.Element("Players").Value);
+                difficulty.Value = int.Parse(conf.Element("Difficulty").Value);
+                colorBox.Checked = bool.Parse(conf.Element("Color").Value);
+                settingsScreen.Color = colorBox.Checked;
+            } catch { Debug.Fail("Failed to load settings"); }
 
             settingsScreen.Render();
             while (visible)
@@ -73,6 +89,21 @@ namespace Lemonade
             PlayerCount = playerSlider.Value;
             DifficultyFactor = difficulty.Value / 10f;
             Color = colorBox.Checked;
+            try
+            {
+                Gen(PlayerCount, difficulty.Value, Color);
+            }
+            catch {Debug.Fail("Failed to save settings");}
+        }
+
+        private static XElement GenDef() => Gen(2, 5, true);
+
+        private static XElement Gen(int players, int difficulty, bool color)
+        {
+            XElement tmp = new XElement("Settings", new XElement("Players", players), new XElement("Difficulty", difficulty),
+                new XElement("Color", color));
+            tmp.Save(Settingsfile);
+            return tmp;
         }
     }
 }
