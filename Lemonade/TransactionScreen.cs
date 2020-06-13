@@ -84,6 +84,10 @@ namespace Lemonade
             _signs.Value = 0;
             CalculateMax();
             _infoLabel.Content = $"It is day {day}, the weather is {weather}";
+            if (weather.W == W.Hot_and_dry)
+                _infoLabel.Content += ". There is a chance of heatwaves";
+            else if (weather.W == W.Rainy)
+                _infoLabel.Content += ". There is a chance of thunderstorms";
             _infoLabel.Point = new Point(ContentPanel.Size.Width / 2 - _infoLabel.Content.Length / 2, 0);
             _glassesLabel.Content = $"How many glasses of lemonade do you wish to make? {lemonadeCost}ct each";
             _glassesLabel.Point = new Point(ContentPanel.Size.Width / 2 - _glassesLabel.Content.Length / 2, 2);

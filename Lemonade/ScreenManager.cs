@@ -1,20 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using CC_Functions.Commandline.TUI;
 
 namespace Lemonade
 {
-    //TODO implement thunderstorm chance on bad weather
+    //TODO implement visual feedback for weather events
     public class ScreenManager
     {
         private readonly AnimationScreen _animator;
+        private readonly List<PlayerState> _players;
         private readonly ResultScreen _result;
         private readonly Settings _settings;
         private readonly TransactionScreen _transaction;
         private int _currentPlayer;
         private int _day;
         private bool _initialEvent = true;
-        private readonly List<PlayerState> _players;
         private bool _running;
         private GameState _state;
         private Weather _weather;
@@ -75,8 +77,7 @@ namespace Lemonade
                     case GameState.Setup:
                         if (_initialEvent)
                         {
-                            _day++;
-                            _weather = new Weather();
+                            _weather = new Weather(_settings);
                             _animator.SetWeather(_weather);
                             _animator.Render();
                             _initialEvent = false;
@@ -98,8 +99,19 @@ namespace Lemonade
                     case GameState.Event:
                         if (_initialEvent)
                         {
-                            _result.Setup(_players);
+                            _result.Setup(_players, _weather);
                             _result.Render();
+                            _day++;
+                            if (_players.Any(s => s.Budget < GlassCost))
+                            {
+                                Console.Clear();
+                                IEnumerable<PlayerState> lost = _players.Where(s => s.Budget < GlassCost);
+                                Console.WriteLine($"The following players are out: {string.Join(", ", lost.Select(s => s.Number.ToString()))}");
+                                Thread.Sleep(2000);
+                                Console.Clear();
+                                _players.RemoveAll(s => lost.Contains(s));
+                            }
+                            DiffDraw.Draw(_settings.Color, true);
                             _initialEvent = false;
                         }
                         _result.ReadInput();

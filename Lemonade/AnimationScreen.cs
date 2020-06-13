@@ -13,12 +13,12 @@ namespace Lemonade
 
         private readonly Image imgControl;
 
-        public AnimationScreen(Settings set) : base(100, 20, Black, set.Color)
+        public AnimationScreen(Settings settings) : base(100, 20, Black, settings.Color)
         {
             ContentPanel.ForeColor = DarkGray;
             Title = "Lemonade - Anim";
             imgControl = new Image(new Pixel[0, 0]);
-            SetWeather(new Weather());
+            SetWeather(new Weather(settings));
             ContentPanel.Controls.Add(imgControl);
             Input += (screen, args) => Ok?.Invoke();
             Close += (screen, args) => Ok?.Invoke();
@@ -29,7 +29,6 @@ namespace Lemonade
         public void SetWeather(Weather w)
         {
             Title = $"Lemonade - Weather: {w}";
-            //TODO weather events (storm (no sales), heat wave (more sales))
             Pixel sky = new Pixel(w.W switch
             {
                 Rainy => Black,

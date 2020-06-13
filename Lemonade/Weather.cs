@@ -6,7 +6,17 @@ namespace Lemonade
     {
         private static readonly Random rnd = new Random();
 
-        public double Factor = rnd.NextDouble();
+        public readonly bool Heatwave;
+        public readonly bool Thunderstorm;
+
+        public double Factor;
+
+        public Weather(Settings settings)
+        {
+            Factor = rnd.NextDouble();
+            Heatwave = W == W.Hot_and_dry && rnd.NextDouble() > settings.DifficultyFactor;
+            Thunderstorm = W == W.Rainy && rnd.NextDouble() < settings.DifficultyFactor;
+        }
 
         public W W
         {
