@@ -22,6 +22,7 @@ namespace Lemonade
         private PlayerState _player;
         private int _signCost;
 
+        //TODO restore last transaction if budget allows
         public TransactionScreen(Settings set) : base(200, 20, ConsoleColor.Black, set.Color)
         {
             ContentPanel.ForeColor = ConsoleColor.DarkGray;

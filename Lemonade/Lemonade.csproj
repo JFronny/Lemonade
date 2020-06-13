@@ -3,8 +3,17 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Deterministic>false</Deterministic>
+        <AssemblyVersion>1.0.*</AssemblyVersion>
     </PropertyGroup>
-
+    <PropertyGroup>
+        <PostBuildEvent Condition="'$(OS)' == 'Windows_NT'">
+            if exist "$(SolutionDir)Data\pkgtool.exe" ($(SolutionDir)Data\pkgtool.exe build --noLogo --binDir .) else if exist "%appdata%\UpTool2\Apps\0e35d154-d0d3-45e0-b080-62f521263a44\app\pkgtool.exe" ("%appdata%\UpTool2\Apps\0e35d154-d0d3-45e0-b080-62f521263a44\app\pkgtool.exe" build --noLogo --binDir .) else echo Cound not find Package build tools, skipping
+        </PostBuildEvent>
+        <PostBuildEvent Condition="'$(OS)' != 'Windows_NT'">
+            if [[ -f "$(SolutionDir)Data/pkgtool.exe" ]]; then $(SolutionDir)Data/pkgtool.exe build --noLogo --binDir .; else echo Cound not find Package build tools, skipping; fi
+        </PostBuildEvent>
+    </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="CC-Functions.Commandline" Version="1.1.7468.32091" />
     </ItemGroup>
